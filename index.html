@@ -326,7 +326,7 @@
 
       document.getElementById("changes").innerHTML = changes.map(x => `<li>${x}</li>`).join("");
       document.getElementById("formulaText").textContent =
-        `Formula: Extra Hit Dice = Mentor Level (${mentorLevel}) − Sidekick Level (${sidekickLevel}) − 1 = ${extraDice}.`;
+        `Formula Example: Extra Hit Dice = Mentor Level (${mentorLevel}) − Sidekick Level (${sidekickLevel}) − 1 = ${extraDice}.`;
     }
 
     ["mentorLevel","sidekickLevel","conMod","sidekickClass"].forEach(id => {
