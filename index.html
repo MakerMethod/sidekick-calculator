@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sidekicking Calculator</title>
+  <style>
+    :root{
+      --bg:#2F2119;
+      --bg-soft:#3b2b22;
+      --panel:#f4efe8;
+      --panel-2:#ebe4da;
+      --text:#2F2119;
+      --muted:#6f6259;
+      --accent:#CEC7BA;
+      --accent-deep:#b9b0a1;
+      --line:#b7aea2;
+      --success:#4f6b4b;
+      --danger:#8a3f36;
+      --shadow:rgba(47,33,25,.18);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg, #2F2119 0%, #3b2b22 100%);
+      color:#f6f2eb;
+      line-height:1.45;
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:24px;
+    }
+    h1,h2,h3{margin:0 0 12px}
+    p{margin:0 0 10px}
+    .hero{
+      background:linear-gradient(180deg, rgba(206,199,186,.18), rgba(206,199,186,.10));
+      color:#f8f5f0;
+      border:1px solid rgba(206,199,186,.35);
+      border-radius:18px;
+      padding:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,.18);
+      margin-bottom:20px;
+    }
+    .sub{color:#e5ddd1}
+    .grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:20px;
+      align-items:start;
+    }
+    .card{
+      background:var(--panel);
+      color:var(--text);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 10px 30px var(--shadow);
+    }
+    .inputs{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:14px;
+    }
+    .field label{
+      display:block;
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:6px;
+      font-weight:600;
+    }
+    .field input,.field select{
+      width:100%;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fffdfa;
+      color:var(--text);
+      font-size:16px;
+    }
+    .field input:focus,.field select:focus{
+      outline:none;
+      border-color:#8f7f70;
+      box-shadow:0 0 0 3px rgba(206,199,186,.45);
+    }
+    .results{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+    .stat{
+      background:var(--panel-2);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+    }
+    .stat .label{
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:6px;
+      font-weight:600;
+    }
+    .stat .value{
+      font-size:28px;
+      font-weight:700;
+      color:var(--text);
+    }
+    .yes{color:var(--success) !important}
+    .no{color:var(--danger) !important}
+    .highlight{
+      margin-top:18px;
+      background:linear-gradient(180deg, rgba(206,199,186,.42), rgba(206,199,186,.22));
+      border:1px solid var(--accent-deep);
+      border-radius:16px;
+      padding:16px;
+    }
+    ul{
+      margin:8px 0 0 18px;
+      padding:0;
+    }
+    .note{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:14px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:15px;
+    }
+    th,td{
+      padding:10px 8px;
+      text-align:left;
+      border-bottom:1px solid var(--line);
+    }
+    th{
+      color:var(--muted);
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+    .small{
+      font-size:13px;
+      color:var(--muted);
+    }
+    .footer-note{
+      margin-top:14px;
+      padding:10px 12px;
+      background:rgba(47,33,25,.06);
+      border:1px solid var(--line);
+      border-radius:12px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    @media (max-width: 820px){
+      .grid{grid-template-columns:1fr}
+      .inputs,.results{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Sidekicking Calculator</h1>
+      <p class="sub">For your campaign rules: level cap 14, average HP only, automatic proficiency by level.</p>
+      <p class="small">Rule summary: if the mentor is at least <strong>3 levels higher</strong>, the sidekick uses the mentor’s proficiency bonus and gains extra hit dice equal to <strong>Mentor Level − Sidekick Level − 1</strong>. HP gained uses average hit die value + CON modifier for each gained die.</p>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="card">
+          <h2>Inputs</h2>
+          <div class="inputs">
+            <div class="field">
+              <label for="mentorLevel">Mentor Level</label>
+              <input id="mentorLevel" type="number" min="1" max="14" value="9" />
+            </div>
+            <div class="field">
+              <label for="sidekickLevel">Sidekick Level</label>
+              <input id="sidekickLevel" type="number" min="1" max="14" value="4" />
+            </div>
+            <div class="field">
+              <label for="sidekickClass">Sidekick Class</label>
+              <select id="sidekickClass"></select>
+            </div>
+            <div class="field">
+              <label for="conMod">Sidekick CON Modifier</label>
+              <input id="conMod" type="number" min="-5" max="10" value="2" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+          <h2>Results</h2>
+          <div class="results">
+            <div class="stat">
+              <div class="label">Eligible for Sidekicking</div>
+              <div class="value" id="eligible">Yes</div>
+            </div>
+            <div class="stat">
+              <div class="label">Effective Proficiency Bonus</div>
+              <div class="value" id="profBonus">+4</div>
+            </div>
+            <div class="stat">
+              <div class="label">Extra Hit Dice Gained</div>
+              <div class="value" id="extraDice">4</div>
+            </div>
+            <div class="stat">
+              <div class="label">HP Gained</div>
+              <div class="value" id="hpGained">32</div>
+            </div>
+          </div>
+
+          <div class="highlight">
+            <h3>Sidekick Stat Changes</h3>
+            <ul id="changes"></ul>
+          </div>
+
+          <div class="footer-note" id="formulaText"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Class Reference</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Hit Die</th>
+                <th>Average HP</th>
+              </tr>
+            </thead>
+            <tbody id="classTable"></tbody>
+          </table>
+          <p class="small" style="margin-top:12px;">Average HP values: d6 → 4, d8 → 5, d10 → 6, d12 → 7.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const classes = [
+      ["Artificer", "d8", 5],
+      ["Barbarian", "d12", 7],
+      ["Bard", "d8", 5],
+      ["Cleric", "d8", 5],
+      ["Druid", "d8", 5],
+      ["Fighter", "d10", 6],
+      ["Monk", "d8", 5],
+      ["Paladin", "d10", 6],
+      ["Ranger", "d10", 6],
+      ["Rogue", "d8", 5],
+      ["Sorcerer", "d6", 4],
+      ["Warlock", "d8", 5],
+      ["Wizard", "d6", 4]
+    ];
+
+    const select = document.getElementById("sidekickClass");
+    const classTable = document.getElementById("classTable");
+
+    classes.forEach(([name, die, avg]) => {
+      const opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = name;
+      if(name === "Fighter") opt.selected = true;
+      select.appendChild(opt);
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${name}</td><td>${die}</td><td>${avg}</td>`;
+      classTable.appendChild(tr);
+    });
+
+    function profByLevel(level){
+      if(level >= 13) return 5;
+      if(level >= 9) return 4;
+      if(level >= 5) return 3;
+      return 2;
+    }
+
+    function classInfo(name){
+      return classes.find(c => c[0] === name);
+    }
+
+    function clampLevel(n){
+      return Math.max(1, Math.min(14, Number(n) || 1));
+    }
+
+    function update(){
+      const mentorLevel = clampLevel(document.getElementById("mentorLevel").value);
+      const sidekickLevel = clampLevel(document.getElementById("sidekickLevel").value);
+      const conMod = Number(document.getElementById("conMod").value) || 0;
+      const cls = classInfo(select.value);
+      const hitDie = cls[1];
+      const avgHp = cls[2];
+
+      document.getElementById("mentorLevel").value = mentorLevel;
+      document.getElementById("sidekickLevel").value = sidekickLevel;
+
+      const diff = mentorLevel - sidekickLevel;
+      const eligible = diff >= 3;
+      const extraDice = eligible ? Math.max(diff - 1, 0) : 0;
+      const prof = eligible ? profByLevel(mentorLevel) : profByLevel(sidekickLevel);
+      const hpGained = eligible ? extraDice * (avgHp + conMod) : 0;
+
+      const eligibleEl = document.getElementById("eligible");
+      eligibleEl.textContent = eligible ? "Yes" : "No";
+      eligibleEl.className = "value " + (eligible ? "yes" : "no");
+
+      document.getElementById("profBonus").textContent = `+${prof}`;
+      document.getElementById("extraDice").textContent = extraDice;
+      document.getElementById("hpGained").textContent = hpGained;
+
+      const changes = [];
+      if(eligible){
+        changes.push(`Uses the mentor’s proficiency bonus of +${prof} instead of the sidekick’s normal +${profByLevel(sidekickLevel)}.`);
+        changes.push(`Gains ${extraDice} extra ${hitDie} hit dice for sidekicking.`);
+        changes.push(`Gains ${hpGained} hit points using the average method (${extraDice} × (${avgHp} + ${conMod >= 0 ? "+"+conMod : conMod})).`);
+        changes.push(`These benefits apply while the sidekick remains within 180 feet of the mentor.`);
+      } else {
+        changes.push(`No sidekicking benefits apply because the mentor is not at least 3 levels higher.`);
+        changes.push(`The sidekick keeps their normal proficiency bonus of +${profByLevel(sidekickLevel)}.`);
+        changes.push(`No extra hit dice or HP are gained.`);
+      }
+
+      document.getElementById("changes").innerHTML = changes.map(x => `<li>${x}</li>`).join("");
+      document.getElementById("formulaText").textContent =
+        `Formula: Extra Hit Dice = Mentor Level (${mentorLevel}) − Sidekick Level (${sidekickLevel}) − 1 = ${extraDice}.`;
+    }
+
+    ["mentorLevel","sidekickLevel","conMod","sidekickClass"].forEach(id => {
+      document.getElementById(id).addEventListener("input", update);
+      document.getElementById(id).addEventListener("change", update);
+    });
+
+    update();
+  </script>
+</body>
+</html>
