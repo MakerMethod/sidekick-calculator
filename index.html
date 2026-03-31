@@ -316,10 +316,10 @@
       if(eligible){
         changes.push(`Uses the mentor’s proficiency bonus of +${prof} instead of the sidekick’s normal +${profByLevel(sidekickLevel)}.`);
         changes.push(`Gains ${extraDice} extra ${hitDie} hit dice for sidekicking.`);
-        changes.push(`Gains ${hpGained} hit points using the average method (${extraDice} × (${avgHp} + ${conMod >= 0 ? "+"+conMod : conMod})).`);
-        changes.push(`These benefits apply while the sidekick remains within 180 feet of the mentor.`);
+        changes.push(`Gains ${hpGained} hit points using the hit die averages.`);
+        changes.push(`These benefits apply while the sidekick remains within 180 feet of the mentor, don't stray too far!`);
       } else {
-        changes.push(`No sidekicking benefits apply because the mentor is not at least 3 levels higher.`);
+        changes.push(`The mentor is not at least 3 levels higher.`);
         changes.push(`The sidekick keeps their normal proficiency bonus of +${profByLevel(sidekickLevel)}.`);
         changes.push(`No extra hit dice or HP are gained.`);
       }
